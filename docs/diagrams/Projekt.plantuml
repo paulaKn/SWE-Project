@@ -1,0 +1,27 @@
+@startuml login
+[*] -> Login: App gestartet
+
+state Login {
+    [*] --> Eingabe
+    Eingabe --> LoginFehler : Falsche Daten
+    Eingabe --> Authentifiziert : Login erfolgreich
+}
+
+Login -> Dashboard : Authentifiziert
+
+state Dashboard {
+    [*] --> Suchformular
+    Suchformular --> Suchergebnisse : Suche abschicken
+    Suchergebnisse --> Detailansicht : Eintrag auswählen
+    Suchergebnisse --> Fehler : Keine Ergebnisse gefunden
+    Suchformular --> NeuesElement : Neu anlegen
+}
+
+state NeuesElement {
+    [*] --> EingabeNeu
+    EingabeNeu --> Validierungsfehler : Eingabe ungültig
+    EingabeNeu --> ErfolgreichAngelegt : Eingabe gültig
+}
+
+
+@enduml

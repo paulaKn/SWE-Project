@@ -13,7 +13,13 @@ const navigation: NavigationType[] = [
 const Header = () => {
   return (
     <header>
-        <Flex direction="row" justifyContent="space-between" align="center" padding="10px" backgroundColor="gray.100">
+        <Flex 
+        direction="row" 
+        justifyContent="space-between" 
+        align="center" 
+        padding="10px" 
+        backgroundColor="white"
+        >
             {/* LOGO */}
             <Flex>
                 <Link href="/">
@@ -26,11 +32,22 @@ const Header = () => {
                 </Link>
             </Flex>
             {/* NAVIGATION */}
-            <Flex direction="row" align="center" gap="10px">
+            <Flex 
+            direction="row" 
+            align="center" 
+            gap="10px"
+            >
                 {navigation.map((item) => (
                     <Box key={item.id}>
                         <Link href={item.href}>
-                            <Button variant="subtle" colorScheme="gray" size="sm" fontWeight="normal" fontSize="14px" padding="0px 10px" borderRadius="10px">
+                            <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            fontWeight="normal" 
+                            fontSize="14px" 
+                            padding="0px 10px" 
+                            borderRadius="10px"
+                            >
                                 {item.name}
                             </Button>
                         </Link>
@@ -40,7 +57,14 @@ const Header = () => {
             {/* LOGIN BUTTON */}
             <Flex align="center">
                 <Link href="/login">
-                    <Button variant="subtle" colorScheme="gray" size="sm" fontWeight="normal" fontSize="14px" padding="0px 10px" borderRadius="10px">
+                    <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    fontWeight="normal" 
+                    fontSize="14px" 
+                    padding="0px 10px" 
+                    borderRadius="10px"
+                    >
                         Login
                     </Button>
                 </Link>

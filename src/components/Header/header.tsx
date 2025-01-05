@@ -18,7 +18,7 @@ const Header = () => {
         justifyContent="space-between" 
         align="center" 
         padding="10px" 
-        backgroundColor="white"
+        backgroundColor="gray.100"
         >
             {/* LOGO */}
             <Flex>
@@ -54,9 +54,9 @@ const Header = () => {
                     </Box>
                 ))}
             </Flex>
-            {/* LOGIN BUTTON */}
+            {/* LOGOUT BUTTON */}
             <Flex align="center">
-                <Link href="/login">
+                <Link href="/">
                     <Button 
                     variant="ghost" 
                     size="sm" 
@@ -65,7 +65,7 @@ const Header = () => {
                     padding="0px 10px" 
                     borderRadius="10px"
                     >
-                        Login
+                        Logout
                     </Button>
                 </Link>
             </Flex>

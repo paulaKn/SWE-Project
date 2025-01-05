@@ -6,7 +6,7 @@ const BASEURL = "https://localhost:3000";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-async function getBuch(id: string) {
+async function getBuchById(id: string) {
     const query = `
     query ($id: ID! = "1") {
       buch(id: $id) {
@@ -50,7 +50,7 @@ export default async function Page({
 }: {
     params: Promise<{ id: string }> ;
 }) {
-    const data = await getBuch((await params).id);
+    const data = await getBuchById((await params).id);
     return (
       <Provider>
         <Flex

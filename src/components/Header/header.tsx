@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import logo from "../../../public/Hka_Logo_Transparent.png"
-import { NavigationType } from '../../types/headerTypes'
+import { NavigationType } from './types'
 import { Box, Button, Flex } from "@chakra-ui/react"
 import { useSession, signIn, signOut } from "next-auth/react"
 

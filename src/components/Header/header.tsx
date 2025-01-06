@@ -1,15 +1,50 @@
+"use client"
 import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import logo from "../../../public/Hka_Logo_Transparent.png"
-import { NavigationType } from './types'
+import { NavigationType } from '../../types/headerTypes'
 import { Box, Button, Flex } from "@chakra-ui/react"
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const navigation: NavigationType[] = [
     { name: "Suchen", href: "#", id: 1},
     { name: "Bearbeiten", href: "#", id: 2},
 ]
- 
+
+
+function AuthButton() {
+    const { data: session } = useSession();
+    if (session) {
+        return (
+            <>
+                <Button 
+                variant="subtle"
+                size="sm" 
+                fontWeight="normal" 
+                fontSize="14px" 
+                padding="0px 10px" 
+                borderRadius="10px"
+                onClick={() => signOut()}>Logout</Button>
+            </>
+        );
+    }
+    return (
+        <>
+            <Button 
+            variant="subtle" 
+            size="sm" 
+            fontWeight="normal" 
+            fontSize="14px" 
+            padding="0px 10px" 
+            borderRadius="10px"
+            onClick={() => signIn()}>Login</Button>
+        </>
+    );
+}
+
+
+
 const Header = () => {
   return (
     <header>
@@ -41,7 +76,7 @@ const Header = () => {
                     <Box key={item.id}>
                         <Link href={item.href}>
                             <Button 
-                            variant="ghost" 
+                            variant="subtle" 
                             size="sm" 
                             fontWeight="normal" 
                             fontSize="14px" 
@@ -57,16 +92,7 @@ const Header = () => {
             {/* LOGOUT BUTTON */}
             <Flex align="center">
                 <Link href="/">
-                    <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    fontWeight="normal" 
-                    fontSize="14px" 
-                    padding="0px 10px" 
-                    borderRadius="10px"
-                    >
-                        Logout
-                    </Button>
+                    <AuthButton />
                 </Link>
             </Flex>
         </Flex>

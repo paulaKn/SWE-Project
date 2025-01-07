@@ -1,6 +1,7 @@
 import { Provider } from "@/components/ui/provider";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Separator, Text } from "@chakra-ui/react";
 import { Rating } from "@/components/ui/rating";
+import Header from "@/components/Header/header";
 
 const BASEURL = "https://localhost:3000";
 
@@ -53,6 +54,7 @@ export default async function Page({
     const data = await getBuchById((await params).id);
     return (
       <Provider>
+        <Header />
         <Flex
         direction="column"
         alignItems="center"
@@ -81,13 +83,16 @@ export default async function Page({
              >
                {data.homepage}
              </Box>
+             <Separator />
           </Box>
-          <Flex className="Description"
+          <Flex 
+          className="Description"
           gap={4}
           mb={4}
           width="100%"
           >
-            <Flex className="DescriptionLeft"
+            <Flex 
+            className="DescriptionLeft"
             direction="column"
             textStyle="sm"
             color="gray.500"
@@ -107,7 +112,8 @@ export default async function Page({
                 <Text fontWeight="semibold">{data.version}</Text>
               </Box>
             </Flex>
-            <Flex className="DescriptionRight"
+            <Flex 
+            className="DescriptionRight"
             direction="column"
             textStyle="sm"
             color="gray.500"
@@ -116,7 +122,7 @@ export default async function Page({
             >
               <Box>
                 <Text>Schlagwörter</Text>
-                <Text fontWeight="semibold">{data.schlagwoerter}</Text>
+                <Text fontWeight="semibold">{data.schlagwoerter.join(', ')}</Text>
               </Box>
               <Box>
                 <Text>Lieferbar</Text>
@@ -132,13 +138,15 @@ export default async function Page({
               </Box>
             </Flex>
           </Flex>
-          <Flex className="RatingPrice"
+          <Flex 
+          className="RatingPrice"
           gap={4}
           justify="space-between"
           mb={4}
           width="100%"
           >
-            <Box className="Rating"
+            <Box 
+            className="Rating"
             justifyItems="left"
             flex={1}
             display="flex"

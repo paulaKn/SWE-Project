@@ -3,12 +3,12 @@ import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import logo from "../../../public/Hka_Logo_Transparent.png"
-import { NavigationType } from './types'
+import { NavigationType } from '../../types/headerType'
 import { Box, Button, Flex } from "@chakra-ui/react"
 import { useSession, signIn, signOut } from "next-auth/react"
 
 const navigation: NavigationType[] = [
-    { name: "Suchen", href: "#", id: 1},
+    { name: "Suchen", href: "/search", id: 1},
     { name: "Bearbeiten", href: "#", id: 2},
 ]
 

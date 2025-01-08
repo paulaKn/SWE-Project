@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Box, Input, Button} from "@chakra-ui/react";
+import { Box, Input, Button} from '@chakra-ui/react';
 import { RiArrowRightLine} from "react-icons/ri"
 import { Heading } from "@chakra-ui/react"
 import { Center} from "@chakra-ui/react";

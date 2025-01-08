@@ -4,6 +4,7 @@ export type Book = {
     rating: string;
     art: string;
     isbn: string;
+    schlagwoerter: string[];
     titel: {
         titel: string;
     };

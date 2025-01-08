@@ -15,6 +15,7 @@ async function getAllBooks() {
             homepage
             rating
             art
+            schlagwoerter
             isbn
             titel {
                 titel

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoStar } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
 import { Provider } from "./ui/provider";
@@ -16,15 +16,43 @@ import {
     Separator, 
     Text,
 } from "@chakra-ui/react";
+import { Tag } from "@/components/ui/tag";
 
 export default function BookSearch({ books }: { books: Book[] }) {
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState<string>("");
+    const [tags, setTags] = useState<string[]>([]);
+    const [filteredBooks, setFilteredBooks] = useState<Book[]>(books);
 
-    const filteredBooks = books.filter((book: Book) =>
-        book.titel.titel.toLowerCase().includes(search.toLowerCase()) ||
-        book.isbn.toLowerCase().includes(search.toLowerCase()) ||
-        book.art.toLowerCase().includes(search.toLowerCase())
-    );
+    // Add a tag when pressing Enter
+    const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && search.trim() !== "") {
+          if (!tags.includes(search)) {
+            setTags((prevTags) => [...prevTags, search]);
+            setSearch("");
+          }
+        }
+    };
+
+    // Remove a tag
+    const handleRemoveTag = (tagToRemove: string) => {
+        setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
+    };
+
+    // Filter books based on tags
+    useEffect(() => {
+        const lowerCaseTags = tags.map((tag: string) => tag.toLowerCase());
+        const result = books.filter((book: Book) => {
+            return lowerCaseTags.every((tag) =>
+                book.titel.titel.toLowerCase().includes(tag) ||
+                book.isbn.toLowerCase().includes(tag) ||
+                book.art.toLowerCase().includes(tag) ||
+                book.schlagwoerter.some(schlagwort =>
+                    schlagwort.toLowerCase().includes(tag)
+                )
+            );
+        });
+        setFilteredBooks(result);
+    }, [tags, books]);
 
     return (
         <Provider>
@@ -34,12 +62,13 @@ export default function BookSearch({ books }: { books: Book[] }) {
         marginTop={10}
         paddingX={8}
         >
-             <InputGroup
+            {/* Search */}
+            <InputGroup    
             flex="1"
             startElement={<LuSearch />}
             >
                 <Input 
-                placeholder="ISBN, Titel, Art" 
+                placeholder="ISBN, Titel, Art, Schlagwort" 
                 variant="subtle"
                 colorScheme="purple"
                 borderRadius="10px"
@@ -48,11 +77,39 @@ export default function BookSearch({ books }: { books: Book[] }) {
                 paddingX={4}
                 paddingY={2}
                 size="md"
+                value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleAddTag}
                 />
             </InputGroup>
         </HStack>
 
+        {/* Tags  -- npx @chakra-ui/cli snippet add tag*/}
+        <HStack
+        marginTop={4}
+        paddingX={8}
+        wrap="wrap"
+        gap={2}
+        >
+            {tags.map((tag, index) => (
+                <Tag 
+                size="lg"
+                key={index} 
+                colorScheme="purple"
+                borderRadius="full"
+                variant="subtle"
+                paddingX={2}
+                paddingY={1}
+                fontSize="sm"
+                fontWeight="medium"
+                onClose={() => handleRemoveTag(tag)}
+                >
+                    {tag}
+                </Tag>
+            ))}
+        </HStack>
+
+        {/* Books */}
         <Flex
         direction="row"
         flexWrap="wrap"

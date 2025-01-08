@@ -3,14 +3,48 @@ import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import logo from "../../../public/Hka_Logo_Transparent.png"
-import { NavigationType } from './types'
+import { NavigationType } from '../../types/headerType'
 import { Box, Button, Flex } from "@chakra-ui/react"
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const navigation: NavigationType[] = [
-    { name: "Suchen", href: "#", id: 1},
+    { name: "Suchen", href: "/search", id: 1},
     { name: "Bearbeiten", href: "#", id: 2},
 ]
- 
+
+
+function AuthButton() {
+    const { data: session } = useSession();
+    if (session) {
+        return (
+            <>
+                <Button 
+                variant="subtle"
+                size="sm" 
+                fontWeight="normal" 
+                fontSize="14px" 
+                padding="0px 10px" 
+                borderRadius="10px"
+                onClick={() => signOut()}>Logout</Button>
+            </>
+        );
+    }
+    return (
+        <>
+            <Button 
+            variant="subtle" 
+            size="sm" 
+            fontWeight="normal" 
+            fontSize="14px" 
+            padding="0px 10px" 
+            borderRadius="10px"
+            onClick={() => signIn()}>Login</Button>
+        </>
+    );
+}
+
+
+
 const Header = () => {
   return (
     <header>
@@ -19,7 +53,7 @@ const Header = () => {
         justifyContent="space-between" 
         align="center" 
         padding="10px" 
-        backgroundColor="white"
+        backgroundColor="gray.100"
         >
             {/* LOGO */}
             <Flex>
@@ -42,7 +76,7 @@ const Header = () => {
                     <Box key={item.id}>
                         <Link href={item.href}>
                             <Button 
-                            variant="ghost" 
+                            variant="subtle" 
                             size="sm" 
                             fontWeight="normal" 
                             fontSize="14px" 
@@ -55,19 +89,10 @@ const Header = () => {
                     </Box>
                 ))}
             </Flex>
-            {/* LOGIN BUTTON */}
+            {/* LOGOUT BUTTON */}
             <Flex align="center">
-                <Link href="/login">
-                    <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    fontWeight="normal" 
-                    fontSize="14px" 
-                    padding="0px 10px" 
-                    borderRadius="10px"
-                    >
-                        Login
-                    </Button>
+                <Link href="/">
+                    <AuthButton />
                 </Link>
             </Flex>
         </Flex>

@@ -1,11 +1,13 @@
 "use client";
 import Login from "@/components/Login";
-
+import Header from "@/components/Header/header";
+import LoginCopy from "@/components/LoginCopy";
 export default function HomePage() {
   return (
     <div>
-      <h1></h1>
-      <Login></Login>
+      <Header />
+      <Login />
+      <LoginCopy />
     </div>
   );
 }

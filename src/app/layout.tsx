@@ -1,9 +1,8 @@
-"use client";
 //import type { Metadata } from "next";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 import { Provider } from "@/components/ui/provider";
-import Header from "@/components/Header/header";
+import { getServerSession } from "next-auth/next";
+import SessionProvider from "@/components/SessionProvider";
 
 
 
@@ -13,18 +12,18 @@ import Header from "@/components/Header/header";
   description: "Buecher",
 };*/
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession();
   return (
     <html suppressHydrationWarning>
       <body>
         <Provider>
-          <SessionProvider>
+          <SessionProvider session={session}>
             <main>{children}</main>
-            <Header />
           </SessionProvider>
         </Provider>
       </body>

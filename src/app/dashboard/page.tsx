@@ -12,7 +12,7 @@ export default function Dashboard() {
   }
 
   if (!session?.user) {
-    router.push("/login");
+    router.push("/");
     return null;
   }
 

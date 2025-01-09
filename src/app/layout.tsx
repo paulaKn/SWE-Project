@@ -6,6 +6,7 @@ import SessionProvider from "@/components/SessionProvider";
 
 
 
+
 /*export const metadata: Metadata = {
   title: "Buecherei",
   description: "Buecher",
@@ -20,13 +21,11 @@ export default async function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body>
-        <SessionProvider session={session}>
-          <Provider>
-            <main>
-              {children}
-            </main>
-          </Provider>
-        </SessionProvider>
+        <Provider>
+          <SessionProvider session={session}>
+            <main>{children}</main>
+          </SessionProvider>
+        </Provider>
       </body>
     </html>
   );

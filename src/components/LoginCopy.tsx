@@ -29,7 +29,7 @@ export default function LoginCopy() {
     if (res?.error) {
       setError(res.error);
     } else {
-      router.push("/dashboard"); 
+      router.push("/"); 
       return null;// Weiterleitung nach erfolgreicher Anmeldung
     }
   };

@@ -9,7 +9,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 
 const navigation: NavigationType[] = [
     { name: "Suchen", href: "/search", id: 1},
-    { name: "Bearbeiten", href: "#", id: 2},
+    { name: "Bearbeiten", href: "/edit", id: 2},
 ]
 
 

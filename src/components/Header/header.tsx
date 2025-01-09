@@ -91,7 +91,7 @@ const Header = () => {
             </Flex>
             {/* LOGOUT BUTTON */}
             <Flex align="center">
-                <Link href="/">
+                <Link href="/login">
                     <AuthButton />
                 </Link>
             </Flex>

@@ -86,7 +86,7 @@ export default function Edit() {
             preis: Number(price),
             rabatt: discountValue[0] / 100,
             lieferbar: delivery === "1" ? true : false,
-            datum: date.toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' }),
+            datum: "2022-01-31",
             homepage,
             schlagwoerter,
             titel: {

@@ -117,6 +117,7 @@ const handler = NextAuth({
     // set the session for the user
     async session({ session, token }) {
       // set the session for the user
+      
       return {
         ...session,
         user: {

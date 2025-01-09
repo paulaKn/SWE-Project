@@ -1,7 +1,8 @@
 "use client"
 
-import { Card , Stack, Input, Button, Flex, HStack, Text } from "@chakra-ui/react"
-import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input"
+import { Card , Stack, Input, Flex, HStack, Text } from "@chakra-ui/react"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { Field } from "@/components/ui/field"
@@ -13,6 +14,9 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { de } from "date-fns/locale";
+import { Book } from "@/types/bookType"
+import { useSession } from "next-auth/react"
+import { User } from "next-auth";
 
 const initialValue = [0];
 
@@ -27,24 +31,97 @@ function isISBN(isbn: string) {
     return isbn13Pattern.test(sanitizedInput);
 }
 
+function isHomepage(homepage: string) {
+    const urlPattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
+    return urlPattern.test(homepage);
+}
+
 export default function Edit() {
+    const {data: session} = useSession();
 
     const [title, setTitle] = useState("");
     const [isbn, setIsbn] = useState("");
     const [isIsbnValid, setIsIsbnValid] = useState(true);
     const [art, setArt] = useState("1");
-    const [price, setPrice] = useState("100");
+    const [price, setPrice] = useState(0);
     const [discountValue, setDiscountValue] = useState(initialValue);
     const [discountSwitch, setDiscountSwitch] = useState(false);
     const [delivery, setDelivery] = useState("1");
     const [date, setDate] = useState(new Date());
-
+    const [homepage, setHomepage] = useState("");
+    const [isHomepageValid, setIsHomepageValid] = useState(true);
+    const [schlagwoerter, setSchlagwoerter] = useState<string[]>([]);
+    const [rating, setRating] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState("");
 
     const handleIsbnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
         setIsbn(input);
         setIsIsbnValid(isISBN(input));
     }
+
+    const handleHomepageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        setHomepage(input);
+        setIsHomepageValid(isHomepage(input));
+    }
+
+    const handleAddBook = async () => {
+        if (!session) {
+            setMessage("You must be logged in to add a book.");
+            return;
+        }
+        
+        if (!isIsbnValid || !isHomepageValid || !title || !art || !price || !discountValue || !delivery || !date || !homepage || !schlagwoerter || !rating) {
+            setMessage("Bitte füllen Sie alle Felder korrekt aus.");
+            return;
+        }
+
+        const book: Book = {
+            id: "",
+            isbn: isbn,
+            rating: rating,
+            art: art,
+            preis: Number(price),
+            rabatt: discountValue[0] / 100,
+            lieferbar: delivery === "1" ? true : false,
+            datum: date.toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' }),
+            homepage,
+            schlagwoerter,
+            titel: {
+                titel: title,
+            },
+        };
+
+        try {
+            setIsLoading(true);
+            setMessage("");
+
+            //call API route
+            const response = await fetch("/api/books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ book, token: (session.user as User).accessToken }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Fehler beim Hinzufügen des Buches");
+            }
+
+            const result = await response.json();
+            console.log("Buch erfolgreich hinzugefügt: " + result);
+            setMessage("Buch erfolgreich hinzugefügt!");
+        } catch (error) {
+            setMessage("Fehler beim Hinzufügen des Buches. Bitte versuche es erneut.");
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <Card.Root 
@@ -85,28 +162,14 @@ export default function Edit() {
                         onValueChange={(e) => setArt(e.value)}
                         >
                             <HStack>
-                                <Radio value="1"> EPUB </Radio>
-                                <Radio value="2"> HARDCOVER </Radio>
-                                <Radio value="3"> PAPERBACK </Radio>
+                                <Radio value="EPUB"> EPUB </Radio>
+                                <Radio value="HARDCOVER"> HARDCOVER </Radio>
+                                <Radio value="PAPERBACK"> PAPERBACK </Radio>
                             </HStack>
                         </RadioGroup>
                     </Field>
                     <Field label="Preis">
-                    <NumberInputRoot
-                        value={price}
-                        onValueChange={(e) => setPrice(e.value)}
-                        defaultValue="100"
-                        formatOptions={{
-                            style: "currency",
-                            currency: "EUR",
-                            currencyDisplay: "code",
-                            currencySign: "accounting",
-                        }}
-                        min={0}
-                        allowMouseWheel
-                    >
-                        <NumberInputField />
-                    </NumberInputRoot>
+                        <Input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
                     </Field>
                     <Field label="Rabatt">
                         <Flex 
@@ -162,18 +225,47 @@ export default function Edit() {
                         startElement="https://"
                         maxW="100%"
                         > 
-                            <Input ps="4.75em"/>
+                            <Input 
+                            ps="4.75em"
+                            value={homepage}
+                            onChange={handleHomepageChange}
+                            />
                         </InputGroup>
+                        <Text color="red"> {isHomepageValid ? "" : "Ungültige Homepage"} </Text>
                     </Field>
                     <Field label="Schlagwoerter">
-                        <Input 
-                        padding="1"
-                        />
+                        <Stack flex="1" direction="row" gap="4">
+                            <Checkbox
+                            checked={schlagwoerter.includes("Javascript")}
+                            onCheckedChange={(e) => setSchlagwoerter(e.checked ? [...schlagwoerter, "Javascript"] : schlagwoerter.filter(word => word !== "Javascript"))}
+                            >
+                                Javascript
+                            </Checkbox>
+                            <Checkbox
+                            checked={schlagwoerter.includes("Typescript")}
+                            onCheckedChange={(e) => setSchlagwoerter(e.checked ? [...schlagwoerter, "Typescript"] : schlagwoerter.filter(word => word !== "Typescript"))}
+                            >
+                                Typescript
+                            </Checkbox>
+                            <Checkbox
+                            checked={schlagwoerter.includes("Python")}
+                            onCheckedChange={(e) => setSchlagwoerter(e.checked ? [...schlagwoerter, "Python"] : schlagwoerter.filter(word => word !== "Python"))}
+                            >
+                                Python
+                            </Checkbox>
+                        </Stack>
                     </Field>
                     <Field label="Rating">
-                        <Rating defaultValue={0} size="lg" />
+                        <Rating 
+                        defaultValue={rating} 
+                        size="lg" 
+                        onValueChange={(e) => setRating(e.value)}
+                        />
                     </Field>
-                    <Button> Hinzufügen </Button>
+                    <Button onClick={handleAddBook} loading={isLoading} > 
+                        Hinzufügen 
+                    </Button>
+                    {message && <Text color="green"> {message} </Text>}
                 </Stack>
             </Card.Body>
         </Card.Root>

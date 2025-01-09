@@ -120,7 +120,8 @@ export default function BookSearch({ books }: { books: Book[] }) {
         paddingX={8}
         width="100%"
         >
-            {filteredBooks.map((book: Book) => (
+            {filteredBooks.length > 0 ? (
+            filteredBooks.map((book: Book) => (
                 <Link 
                 href={`/buch/${book.id}`} 
                 key={book.id}
@@ -184,7 +185,19 @@ export default function BookSearch({ books }: { books: Book[] }) {
                         </Flex>
                     </Flex>
                 </Link>
-            ))}
+            ))
+            ) : (
+                <Text
+                fontSize="lg"
+                fontWeight="semibold"
+                color="gray.600"
+                marginTop={6}
+                textAlign="center"
+                width="100%"
+                >
+                    Keine Suchergebnisse
+                </Text>
+            )}
         </Flex>
         </Provider>
     )

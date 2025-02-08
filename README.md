@@ -5,7 +5,7 @@ A Next.js web application for managing a digital library system with features fo
 ## Demo
 
 ### Book Search Feature
-![Book Search Demo](./public/buchSuche.gif)
+<img src="./public/buchSuche.gif" alt="Book Search Demo" width="300" />
 
 Watch how easily you can search for books using our tag-based filtering system:
 - Type keywords to create search tags

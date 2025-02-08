@@ -25,7 +25,7 @@ Watch how easily you can search for books using our tag-based filtering system:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/buecherei.git
+git clone https://github.com/paulaKn/SWE-Project.git
 ```
 
 2. Install dependencies:

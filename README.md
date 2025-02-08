@@ -5,9 +5,7 @@ A Next.js web application for managing a digital library system with features fo
 ## Demo
 
 ### Book Search Feature
-<video autoplay loop muted playsinline>
-  <source src="./public/suche.mp4" type="video/mp4">
-</video>
+![Book Search Demo](./public/buchSuche.gif)
 
 Watch how easily you can search for books using our tag-based filtering system:
 - Type keywords to create search tags
